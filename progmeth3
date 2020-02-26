@@ -1,0 +1,94 @@
+package deck;
+
+
+import java.util.Arrays;
+
+import card.base.Card;
+
+
+public class Deck {
+
+	private String name;
+	private int deckSize;
+	private Card[] decklist;
+
+	// TODO: constructor
+
+	public Deck(String name, Card[] deckList) {
+		this.name = name;
+		this.decklist = deckList;
+		setDeckSize(this.decklist.length);
+	}
+
+
+
+	//You CAN modify the first line
+	public int insertCard(Card card) throws Exception {
+		int count = 0;
+		for(Card inside : decklist){
+			if (inside.equals(card)){
+				count++;
+			}
+		}
+		if ( count == 4 ){
+			throw new InsertCardFailedException("You can only put 4 of the same card into the deck");
+		}
+		if (deckSize >= decklist.length+1){
+			decklist[deckSize] = card;
+			deckSize++;
+		}else{
+			Card[] buffer = Arrays.copyOf(decklist,deckSize*2);
+			buffer[deckSize++] = card;
+			decklist = buffer;
+		}
+		return deckSize++;
+		//FILL CODE HERE
+		//You can used Arrays.copyOf(Original Array, New Length) to create new arrays with bigger size
+		//Must return new deckSize
+
+	}
+
+	//You CAN modify the first line
+	public Card removeCard(int slotNumber) throws RemoveCardFailedException  {
+		Card buffer = null;
+		if( slotNumber < deckSize ){
+			buffer = decklist[slotNumber];
+			if (deckSize - 1 - slotNumber >= 0)
+				System.arraycopy(decklist, slotNumber + 1, decklist, slotNumber, deckSize - 1 - slotNumber);
+			setDeckSize(deckSize-1);
+		}else{
+			throw new RemoveCardFailedException("Number you insert exeed deck");
+		}
+		return buffer;
+		//FILL CODE HERE
+		//You can used Arrays.copyOf(Original Array, New Length) to create new arrays with bigger size
+		//Once card is removed, other card down the list must rearrange to the empty slot
+		//Must return card that was removed
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder()
+				.append("{").append(this.getName()).append("}")
+				.append("(").append(this.getDeckSize()).append(" deck size)")
+				.toString();
+	}
+
+	/* GETTERS & SETTERS */
+
+	public void setDeckSize(int decksize) {
+		this.deckSize = decksize;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getDeckSize() {
+		return deckSize;
+	}
+
+	public Card[] getDeckList() {
+		return decklist;
+	}
+}
